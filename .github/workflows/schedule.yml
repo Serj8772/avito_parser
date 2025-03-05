@@ -2,9 +2,19 @@ name: runbot
 on:
   push:
 
+env:
+  TOKEN: ${{ secrets.TOKEN }}
+  ID_CHANNEL: ${{ secrets.ID_CHANNEL }}
+  LINK: ${{ secrets.LINK }}
+  TEST_LINK: ${{ secrets.TEST_LINK }}
+
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Set up dependencies
+        uses: pip install -r requirements.txt
+      - name: Run App
+        run: python main.py
