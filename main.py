@@ -21,7 +21,7 @@ def main(selenium=False):
         selenium_bot = SeleniumS(headless=True)
         selenium_bot.get_page(link)
         selenium_bot.make_screenshot()
-        attribute_list = selenium_bot.get_attributes_list(By.CLASS_NAME, elements_value, By.TAG_NAME, 'a', 'href')
+        attribute_list = selenium_bot.get_ads_links(By.CLASS_NAME, elements_value, By.TAG_NAME, 'a', 'href')
         selenium_bot.close()
     else:
         bs = BS(link)
