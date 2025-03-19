@@ -14,9 +14,11 @@ elements_value_a_class = 'styles-module-root-m3BML' #a class name in div
 # элемент, который видно только залогиненному пользователю
 loggined_element_class_name = 'styles-module-children-root-_JSAs'
 # кнопка написать сообщение на странице объявления
-write_message_button_xpath = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div/div/div/div[3]/div[3]/div/div/div/div/div/button[2]'
-write_message_button_xpath = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div[2]/div/div/div/button'
-write_message_button_xpath = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div/div/div/div/button[2]'
+# write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div/div/div/div[3]/div[3]/div/div/div/div/div/button[2]'
+# write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div[2]/div/div/div/button'
+# write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div/div/div/div/button[2]'
+# write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div[2]/div/div/div/button'
+write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div[2]/div/div/div/button'
 # сообщения от пользователя
 left_messages_class_name = 'message-base-message_beige-y5gCi'
 right_messages_class_name = 'message-base-message_blue-D8JlC'

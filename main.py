@@ -5,7 +5,7 @@ import time
 import os
 from dotenv import load_dotenv
 
-from settings import delay, elements_value, elements_value_a_class, filename, prompt
+from settings import delay, elements_value, elements_value_a_class, filename, prompt, main_page, auth_link
 from source.CsvUser import CsvUser
 from source.SeleniumS import SeleniumS
 from source.TelegramBot import TelegramBot
@@ -20,6 +20,7 @@ base_url = os.getenv("AI_BASE_URL")
 api_key = os.getenv("AI_API_KEY")
 login = os.getenv("AVITO_LOGIN")
 password = os.getenv("AVITO_PASSWORD")
+
 prompt = prompt
 
 
@@ -47,11 +48,24 @@ def main(selenium=False):
 
 
 if __name__ == '__main__':
+
+    def scraper_loop():
+        while True:
+            print('start scrub')
+            main(selenium=False)  # Убедитесь, что main корректно обрабатывает selenium=False
+            time.sleep(delay * 60)
+
+    # Создаем экземпляр бота
     tbot = TelegramBot(token)
+
+    # Запускаем потоки
     bot_thread = threading.Thread(target=tbot.run, daemon=True)
+    bot_thread1 = threading.Thread(target=tbot.check_new_messages, daemon=True)  # Исправлено: передаем метод как объект
+    scraper_thread = threading.Thread(target=scraper_loop, daemon=True)
+
     bot_thread.start()
+    bot_thread1.start()
+    scraper_thread.start()
 
     while True:
-        print('start scrub')
-        main(selenium=False)
-        time.sleep(delay * 60)
+        time.sleep(1)

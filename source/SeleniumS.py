@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 import fake_useragent
 import time
 import pickle
-from settings import left_messages_class_name, right_messages_class_name, all_messages_class_name, send_message_field_class_name, send_message_button_class_name, main_page, auth_link, loggined_element_class_name
+from settings import left_messages_class_name, right_messages_class_name, all_messages_class_name, main_page, auth_link, loggined_element_class_name
 
 class SeleniumS:
     def __init__(self, headless=False, use_fake_useragent=True):
@@ -27,6 +27,16 @@ class SeleniumS:
         self.driver.implicitly_wait(20)
         self.driver.get(url)
         time.sleep(10)
+
+    def open_new_tab(self, url):
+        self.driver.execute_script(f"window.open('{url}', '_blank');")
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+        time.sleep(5)
+
+    def switch_to_first_tab(self):
+        self.driver.switch_to.window(self.driver.window_handles[0])
+
+
 
     def login(self, main_page, auth_link, login, password):
         try:
@@ -121,12 +131,13 @@ class SeleniumS:
             print('Ошибка чтения истории сообщений:', e)
 
     def click_on_button_write_message(self, button_method_by, button_value):
+        self.make_screenshot()
         button = self.driver.find_element(button_method_by, button_value)
         button.click()
         time.sleep(3)
 
 
-    def send_message(self, message):
+    def send_message(self, message, send_message_field_class_name, send_message_button_class_name):
         send_message = self.driver.find_element(By.CLASS_NAME, send_message_field_class_name)
         send_message.send_keys(message)
         time.sleep(3)
@@ -134,8 +145,26 @@ class SeleniumS:
         # press_button.click()
         time.sleep(5)
 
+    def get_unread_message(self, elements_method_by, elements_value):
+        try:
+            messages: list = self.driver.find_elements(elements_method_by, elements_value)
+            if messages:
+                messages[0].click()
+                time.sleep(5)
+                return True
+            else:
+                return False
+
+
+
+        except Exception as e:
+            print('Ошибка обработки новых сообщения(новые сообщения не найдены): ', e)
 
     def close(self):
+        self.driver.close()
+        self.driver.switch_to.window(self.driver.window_handles[0])
+
+    def quit(self):
         self.driver.quit()
 
 
