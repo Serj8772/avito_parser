@@ -1,31 +1,38 @@
+import threading
 from selenium.webdriver.common.by import By
+import pickle
 import time
 import os
 from dotenv import load_dotenv
 
-from settings import delay, elements_value, filename
+from settings import delay, elements_value, elements_value_a_class, filename, prompt
 from source.CsvUser import CsvUser
 from source.SeleniumS import SeleniumS
 from source.TelegramBot import TelegramBot
 from source.BS import BS
-
+from source.AI import Gpt
 
 load_dotenv()
 token = os.getenv("TOKEN")
 id_channel = os.getenv("ID_CHANNEL")
 link = os.getenv("LINK")
+base_url = os.getenv("AI_BASE_URL")
+api_key = os.getenv("AI_API_KEY")
+login = os.getenv("AVITO_LOGIN")
+password = os.getenv("AVITO_PASSWORD")
+prompt = prompt
 
 
 def main(selenium=False):
     if selenium:
-        selenium_bot = SeleniumS(headless=True)
+        selenium_bot = SeleniumS(headless=False)
         selenium_bot.get_page(link)
         selenium_bot.make_screenshot()
         attribute_list = selenium_bot.get_ads_links(By.CLASS_NAME, elements_value, By.TAG_NAME, 'a', 'href')
         selenium_bot.close()
     else:
         bs = BS(link)
-        attribute_list = bs.get_links('iva-item-title-CdRXl', 'styles-module-root-m3BML')
+        attribute_list = bs.get_links(elements_value, elements_value_a_class)
 
     csv_user = CsvUser(filename)
     rows = csv_user.read_csv()
@@ -33,7 +40,7 @@ def main(selenium=False):
         if [attribute] not in rows:
             csv_user.write_csv([attribute])
             print(attribute, '--', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-            tbot.send_message(id_channel, text=attribute)
+            tbot.send_message(id_channel, text=attribute, button=True)
             time.sleep(5)
         else:
             print('строка уже существует', '--', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -41,7 +48,10 @@ def main(selenium=False):
 
 if __name__ == '__main__':
     tbot = TelegramBot(token)
+    bot_thread = threading.Thread(target=tbot.run, daemon=True)
+    bot_thread.start()
 
     while True:
+        print('start scrub')
         main(selenium=False)
         time.sleep(delay * 60)

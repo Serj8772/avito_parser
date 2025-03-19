@@ -37,7 +37,7 @@ class Gpt:
 
     def response(self, message):
         try:
-            self.conversation_history.append({"role": "user", "content": message})
+            self.conversation_history.extend(message)
             if len(self.conversation_history) > self.max_history:
                 self.conversation_history = [self.conversation_history[0]] + self.conversation_history[-(self.max_history - 1):]
 
