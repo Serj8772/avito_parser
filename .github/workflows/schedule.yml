@@ -1,9 +1,7 @@
 name: runbot
 on:
-  push:
   workflow_dispatch:
-  schedule:
-    - cron: '0 12 * * *' # каждый день в 12:00
+
 
 env:
   TOKEN: ${{ secrets.TOKEN }}
