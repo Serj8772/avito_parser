@@ -1,6 +1,6 @@
 name: runbot
 on:
-  push:
+  workflow_dispatch:
 
 env:
   TOKEN: ${{ secrets.TOKEN }}
