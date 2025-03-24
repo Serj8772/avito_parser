@@ -3,6 +3,7 @@ from telebot import types
 from selenium.webdriver.common.by import By
 import time
 import os
+import random
 from dotenv import load_dotenv
 from source.SeleniumS import SeleniumS
 from source.AI import Gpt
@@ -20,10 +21,10 @@ class TelegramBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token)
         self.link_to_start_conversation = None
-
+        self.selenium_bot = SeleniumS(headless=False)
         # логинимся и обрабатываем новые сообщения Авито
         try:
-            self.selenium_bot = SeleniumS(headless=False)
+
             self.selenium_bot.login(main_page, auth_link, login, password)
 
             # while True:
@@ -55,6 +56,7 @@ class TelegramBot:
         while True:
             self.selenium_bot.switch_to_first_tab()
             self.selenium_bot.get_page('https://www.avito.ru/profile/messenger?unread=true')
+
             unread_messages = self.selenium_bot.get_unread_message(By.CLASS_NAME, 'router-link-root-sGqou')
             if unread_messages:
 
@@ -74,7 +76,7 @@ class TelegramBot:
                 else:
                     print('ошибка получения истории сообщений')
             else:
-                print('нет новых сообщений')
+                print('нет новых сообщений. готов к приему ссылок из телеграм-бота')
                 time.sleep(121)
 
     def send_message(self, id_channel, text, button=False):
@@ -111,7 +113,7 @@ class TelegramBot:
         try:
 
             self.selenium_bot.open_new_tab(link_to_start_conv)
-            self.selenium_bot.click_on_button_write_message(By.XPATH, write_message_button)
+            self.selenium_bot.click_on_button_write_message(By.CLASS_NAME, write_message_button)
             print('нажал кнопку "Написать сообщение"')
 
 
@@ -119,25 +121,14 @@ class TelegramBot:
             print('получил историю', history)
             if history is None:
                 print('истории нет, отправляю первое сообщение')
-                self.selenium_bot.send_message(first_message[0], send_message_field_class_name=send_message_field_class_name, send_message_button_class_name=send_message_button_class_name) # --------------- настроить рандом !!!
+                self.selenium_bot.send_message(first_message[random.randint(0, len(first_message)-1)],
+                                               send_message_field_class_name=send_message_field_class_name,
+                                               send_message_button_class_name=send_message_button_class_name)
                 time.sleep(5)
                 close_message = f'первое сообщение для {link_to_start_conv} отправлено, закрываю вкладку'
+                print(close_message)
                 self.bot.send_message(id_channel, close_message)
                 self.selenium_bot.close()
-
-
-
-            # elif history is False:
-            #     time.sleep(35)
-            # elif any(end_message in history[-1]['content'].lower() for end_message in end_messages):
-            #     self.selenium_bot.close()
-            #     break
-            # elif history:
-            #     gpt = Gpt(base_url, api_key, prompt)
-            #     gpt_response = gpt.response(history)
-            #     print('отправил историю в gpt')
-            #     print(gpt_response)
-            #     self.selenium_bot.send_message(gpt_response, send_message_field_class_name=send_message_field_class_name, send_message_button_class_name=send_message_button_class_name)
 
             else:
                 print('есть история')

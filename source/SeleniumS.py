@@ -132,17 +132,20 @@ class SeleniumS:
 
     def click_on_button_write_message(self, button_method_by, button_value):
         self.make_screenshot()
-        button = self.driver.find_element(button_method_by, button_value)
-        button.click()
+        try:
+            button = self.driver.find_elements(button_method_by, button_value)
+            button[1].click()
+        except Exception as ex:
+            button = self.driver.find_element(button_method_by, button_value)
+            button.click()
         time.sleep(3)
-
 
     def send_message(self, message, send_message_field_class_name, send_message_button_class_name):
         send_message = self.driver.find_element(By.CLASS_NAME, send_message_field_class_name)
         send_message.send_keys(message)
         time.sleep(3)
         press_button = self.driver.find_element(By.CLASS_NAME, send_message_button_class_name)
-        # press_button.click()
+        press_button.click()
         time.sleep(5)
 
     def get_unread_message(self, elements_method_by, elements_value):
