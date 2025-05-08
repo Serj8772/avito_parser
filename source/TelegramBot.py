@@ -21,7 +21,7 @@ class TelegramBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token)
         self.link_to_start_conversation = None
-        self.selenium_bot = SeleniumS(headless=False)
+        self.selenium_bot = SeleniumS(headless=True)
         # логинимся и обрабатываем новые сообщения Авито
         try:
 

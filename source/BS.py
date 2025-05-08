@@ -16,7 +16,7 @@ class BS:
             print(headers)
         self.html = requests.get(self.url, headers=headers)
 
-    def get_links(self, div_class='iva-item-title-CdRXl', a_class='styles-module-root-m3BML'):
+    def get_links(self, div_class='iva-item-title-KE8A9', a_class='styles-module-root-cfrVG'):
         links = []
         items = self.soup.find_all('div', class_=div_class)
         for item in items:
@@ -30,5 +30,6 @@ class BS:
 if __name__ == '__main__':
     link = 'https://www.avito.ru/lobnya/kvartiry/sdam/na_dlitelnyy_srok-ASgBAgICAkSSA8gQ8AeQUg?context=H4sIAAAAAAAA_wEjANz_YToxOntzOjg6ImZyb21QYWdlIjtzOjc6ImNhdGFsb2ciO312FITcIwAAAA&f=ASgBAgICA0SSA8gQ8AeQUrCzFP6hjwM&s=104'
     avito_bs = BS(link)
+    print(f'найдено {len(avito_bs.get_links())} ссылок')
     print(avito_bs.get_links())
 

@@ -9,8 +9,8 @@ main_page = 'https://www.avito.ru/'
 auth_link = 'https://www.avito.ru/#login?authsrc=h'
 
 # авито стили элементов страницы для парсинга
-elements_value = 'iva-item-title-CdRXl' #div class name
-elements_value_a_class = 'styles-module-root-m3BML' #a class name in div
+elements_value = 'iva-item-title-KE8A9' #div class name
+elements_value_a_class = 'styles-module-root-cfrVG' #a class name in div
 # элемент, который видно только залогиненному пользователю
 loggined_element_class_name = 'styles-module-children-root-_JSAs'
 # кнопка написать сообщение на странице объявления
