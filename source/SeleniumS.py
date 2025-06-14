@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 import fake_useragent
 import time
 import pickle
-from settings import left_messages_class_name, right_messages_class_name, all_messages_class_name, main_page, auth_link, loggined_element_class_name
+from settings import left_messages_class_name, right_messages_class_name, all_messages_class_name, main_page, auth_link, loggined_element_class_name, sms_field_name, sms_button_class_name
 
 class SeleniumS:
     def __init__(self, headless=False, use_fake_useragent=True):
@@ -23,6 +23,7 @@ class SeleniumS:
         self.driver = webdriver.Chrome(options=opts)
         self.driver.set_window_size(2560, 1600)
 
+
     def get_page(self, url):
         self.driver.implicitly_wait(20)
         self.driver.get(url)
@@ -36,7 +37,22 @@ class SeleniumS:
     def switch_to_first_tab(self):
         self.driver.switch_to.window(self.driver.window_handles[0])
 
+    def sms_request(self, sms_code):
+        try:
+            self.driver.find_element(By.CLASS_NAME, 'SMSCodeVerifierForm-description-U4f1a')
+            print('запрос смс-кода')
 
+            sms_field = self.driver.find_element(By.NAME, sms_field_name)
+            sms_field.send_keys(sms_code)
+            time.sleep(7)
+            sms_button = self.driver.find_element(By.CLASS_NAME, sms_button_class_name)
+            sms_button.click()
+            time.sleep(15)
+
+            pickle.dump(self.driver.get_cookies(), open(f'{login}_cookies', 'wb'))
+            # self.make_screenshot()
+        except Exception as ex:
+            print('Не удалось авторизоваться через смс', ex)
 
     def login(self, main_page, auth_link, login, password):
         try:
@@ -69,17 +85,28 @@ class SeleniumS:
                 passwd = self.driver.find_element(By.NAME, 'password')
                 passwd.send_keys(password)
                 time.sleep(2)
-                login_button = self.driver.find_element(By.NAME, 'submit')
+                login_button = self.driver.find_element(By.XPATH, '//span[text()="Войти"]')
+                # login_button = self.driver.find_element(By.NAME, 'submit')
                 login_button.click()
-                time.sleep(30)
+                time.sleep(10)
+
+                self.driver.find_element(By.CLASS_NAME, loggined_element_class_name)
                 # сохраняем cookies
                 pickle.dump(self.driver.get_cookies(), open(f'{login}_cookies', 'wb'))
 
-                self.driver.find_element(By.CLASS_NAME, loggined_element_class_name)
-
             except Exception as ex:
                 print('Не удалось авторизоваться через логин и пароль', ex)
+                time.sleep(3)
+                return False
 
+
+
+
+
+
+
+    def recive_sms_code(self):
+        pass
 
 
     def make_screenshot(self):

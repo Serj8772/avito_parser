@@ -21,36 +21,16 @@ class TelegramBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token)
         self.link_to_start_conversation = None
-        self.selenium_bot = SeleniumS(headless=True)
+        # self.sms_code = "111111"
+        self.selenium_bot = SeleniumS(headless=False)
+
+    def login(self):
         # логинимся и обрабатываем новые сообщения Авито
-        try:
+        # self.selenium_bot.login(main_page, auth_link, login, password)
+        if self.selenium_bot.login(main_page, auth_link, login, password) == False:
+            time.sleep(30)
+            self.selenium_bot.sms_request(self.sms_code)
 
-            self.selenium_bot.login(main_page, auth_link, login, password)
-
-            # while True:
-            #     self.selenium_bot.get_page('https://www.avito.ru/profile/messenger?unread=true')
-            #     unread_messages = self.selenium_bot.get_unread_message(By.CLASS_NAME, 'router-link-root-sGqou')
-            #     if unread_messages:
-            #
-            #         history = self.selenium_bot.get_message_history()
-            #         if history is False:
-            #             self.selenium_bot.get_page('https://www.avito.ru/profile/messenger?unread=true')
-            #         elif history:
-            #             gpt = Gpt(base_url, api_key, prompt)
-            #             gpt_response = gpt.response(history)
-            #             print('отправил историю в gpt')
-            #             print(gpt_response)
-            #             self.selenium_bot.send_message(gpt_response, send_message_field_class_name=send_message_field_class_name, send_message_button_class_name=send_message_button_class_name)
-            #             time.sleep(3)
-            #             self.selenium_bot.get_page('https://www.avito.ru/profile/messenger?unread=true')
-            #         else:
-            #             print('ошибка получения истории сообщений')
-            #     else:
-            #         print('нет новых сообщений')
-            #         time.sleep(121)
-
-        except Exception as e:
-            print('ошибка обработки новых сообщений Авито', e)
 
     def check_new_messages(self):
         while True:
@@ -99,11 +79,20 @@ class TelegramBot:
             self.bot.send_message(call.message.chat.id, "Передаю ссылку для начала диалога")
             self.send_first_message(self.link_to_start_conversation, id_channel)
 
+        @self.bot.channel_post_handler(func=lambda message: message.text.isdigit() and len(message.text) == 5)
+        def handle_channel_post(six_digit_code):
+            print(f"Получен смс-код: {six_digit_code.text}")
+            self.bot.send_message(six_digit_code.chat.id, f"получен смс-код: {six_digit_code.text}")
+            self.sms_code = six_digit_code.text
+
     def run(self):
         try:
-            print('bot polling...')
+
             self.register_handlers()
+            print('bot polling...')
             self.bot.polling(non_stop=True)
+
+
         except Exception as e:
             print('ошибка при запуске бота', e)
             time.sleep(5)
@@ -137,6 +126,8 @@ class TelegramBot:
         except Exception as e:
             print(f"Произошла ошибка: {e}")
             self.selenium_bot.close()
+
+
 
 
 if __name__ == '__main__':

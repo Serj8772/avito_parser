@@ -52,7 +52,7 @@ if __name__ == '__main__':
     def scraper_loop():
         while True:
             print('start scrub')
-            main(selenium=False)  # Убедитесь, что main корректно обрабатывает selenium=False
+            main(selenium=False)
             time.sleep(delay * 60)
 
     # Создаем экземпляр бота
@@ -60,11 +60,14 @@ if __name__ == '__main__':
 
     # Запускаем потоки
     bot_thread = threading.Thread(target=tbot.run, daemon=True)
-    bot_thread1 = threading.Thread(target=tbot.check_new_messages, daemon=True)  # Исправлено: передаем метод как объект
+    bot_thread1 = threading.Thread(target=tbot.login, daemon=True)
+    bot_thread2 = threading.Thread(target=tbot.check_new_messages, daemon=True)
     scraper_thread = threading.Thread(target=scraper_loop, daemon=True)
 
     bot_thread.start()
     bot_thread1.start()
+    bot_thread1.join()
+    bot_thread2.start()
     scraper_thread.start()
 
     while True:

@@ -13,6 +13,9 @@ elements_value = 'iva-item-title-KE8A9' #div class name
 elements_value_a_class = 'styles-module-root-cfrVG' #a class name in div
 # элемент, который видно только залогиненному пользователю
 loggined_element_class_name = 'styles-module-children-root-_JSAs'
+# элементы запроса смс кода
+sms_field_name = 'code'
+sms_button_class_name = 'css-mygrgj'
 # кнопка написать сообщение на странице объявления
 # write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div/div/div/div[3]/div[3]/div/div/div/div/div/button[2]'
 # write_message_button = '//*[@id="app"]/div/div[4]/div[1]/div/div[2]/div[3]/div/div[2]/div[1]/div/div/div[3]/div[1]/div/div/div[2]/div/div/div/button'
