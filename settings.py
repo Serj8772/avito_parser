@@ -12,7 +12,7 @@ auth_link = 'https://www.avito.ru/#login?authsrc=h'
 elements_value = 'iva-item-title-KE8A9' #div class name
 elements_value_a_class = 'styles-module-root-cfrVG' #a class name in div
 # элемент, который видно только залогиненному пользователю
-loggined_element_class_name = 'styles-module-children-root-_JSAs'
+loggined_element_xpath = '//a[text()="Мои объявления"]'
 # элементы запроса смс кода
 sms_field_name = 'code'
 sms_button_class_name = 'css-mygrgj'

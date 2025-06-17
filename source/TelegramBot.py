@@ -21,16 +21,21 @@ class TelegramBot:
     def __init__(self, token):
         self.bot = telebot.TeleBot(token)
         self.link_to_start_conversation = None
-        # self.sms_code = "111111"
-        self.selenium_bot = SeleniumS(headless=False)
+        self.sms_code = None
+        self.selenium_bot = SeleniumS(headless=True)
 
     def login(self):
         # логинимся и обрабатываем новые сообщения Авито
         # self.selenium_bot.login(main_page, auth_link, login, password)
         if self.selenium_bot.login(main_page, auth_link, login, password) == False:
-            time.sleep(30)
-            self.selenium_bot.sms_request(self.sms_code)
-
+            time.sleep(10)
+            self.send_message(id_channel, "Требуется ввести смс-код")
+            time.sleep(2)
+            while self.sms_code == None:
+                time.sleep(2)
+                print('ждем смс-код')
+            if self.selenium_bot.sms_request(self.sms_code, login) == False:
+                self.send_message(id_channel, "Не удалось авторизоваться")
 
     def check_new_messages(self):
         while True:
