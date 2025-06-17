@@ -102,6 +102,7 @@ class SeleniumS:
                 time.sleep(3)
                 return False
 
+
     def make_screenshot(self):
         self.driver.save_screenshot(f'screenshots/screenshot'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+'.png')
 
