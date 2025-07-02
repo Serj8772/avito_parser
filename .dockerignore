@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.github/
+.git
+.gitignore
+*.swp
+*.tmp
+.DS_Store
+.idea/
+.dockerignore
+Dockerfile*
+
+.env

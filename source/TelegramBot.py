@@ -29,18 +29,24 @@ class TelegramBot:
         # self.selenium_bot.login(main_page, auth_link, login, password)
         if self.selenium_bot.login(main_page, auth_link, login, password) == False:
             time.sleep(10)
-            self.send_message(id_channel, "Требуется ввести смс-код")
+            self.send_message(id_channel, "Не удалось авторизоваться через куки, логину и паролю. Требуется ввести смс-код")
             time.sleep(2)
             while self.sms_code == None:
                 time.sleep(2)
                 print('ждем смс-код')
             if self.selenium_bot.sms_request(self.sms_code, login) == False:
-                self.send_message(id_channel, "Не удалось авторизоваться")
+                self.send_message(id_channel, "Не удалось авторизоваться по смс")
+        else:
+            self.send_message(id_channel, "авторизация прошла успешно")
 
     def check_new_messages(self):
         while True:
             self.selenium_bot.switch_to_first_tab()
             self.selenium_bot.get_page('https://www.avito.ru/profile/messenger?unread=true')
+
+            if not self.selenium_bot.check_login():
+                self.send_message(id_channel, "Пользователь не авторизован.")
+
 
             unread_messages = self.selenium_bot.get_unread_message(By.CLASS_NAME, 'router-link-root-sGqou')
             if unread_messages:

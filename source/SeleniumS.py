@@ -57,6 +57,14 @@ class SeleniumS:
             self.make_screenshot()
             return False
 
+    def check_login(self):
+        if self.driver.find_element(By.XPATH, loggined_element_xpath):
+            return True
+        else:
+            print('Пользователь не авторизован')
+            self.make_screenshot()
+            return False
+
     def login(self, main_page, auth_link, login, password):
         try:
             # выгрузка и вход по cookies
